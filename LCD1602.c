@@ -126,7 +126,6 @@ void LCD_ShowString(unsigned char Line, unsigned char Col, char* String) {
 void LCD_ShowNum(unsigned char Line, unsigned char Col, unsigned int Number, unsigned char Length) {
     LCD_SetCursor(Line, Col);
     for (; Length; Length--) {
-        // LCD_WriteData(Number / LCD_Pow_D[Length - 1] % 10 + '0');
         LCD_WriteData(Number / LCD_Pow(10, Length - 1) % 10 + '0');
     }
 }
@@ -148,7 +147,6 @@ void LCD_ShowSignedNum(unsigned char Line, unsigned char Col, int Number, unsign
         Number = -Number;
     }
     for (; Length; Length--) {
-        // LCD_WriteData(Number / LCD_Pow_D[Length - 1] % 10 + '0');
         LCD_WriteData(Number / LCD_Pow(10, Length - 1) % 10 + '0');
     }
 }
@@ -172,5 +170,19 @@ void LCD_ShowHexNum(unsigned char Line, unsigned char Col, unsigned int Number, 
         else {
             LCD_WriteData(digit - 10 + 'A');
         }
+    }
+}
+
+/**
+  * @brief  指定位置开始以二进制显示所给数字
+  * @param  Line 行位置，范围: 2
+  * @param  Col 起始列位置，范围: 16
+  * @param  Number 要显示的数字，范围: 0 - 0xFFFF
+  * @param  Length 要显示数字的长度，范围: 1 - 16
+  */
+void LCD_ShowBinNum(unsigned char Line, unsigned char Col, unsigned int Number, unsigned char Length) {
+    LCD_SetCursor(Line, Col);
+    for (; Length; Length--) {
+        LCD_WriteData(((Number >> (Length - 1)) & 0x01) + '0');
     }
 }
