@@ -3,15 +3,15 @@
 
 #if LCD_POW_METHOD == 1 // 数组查表
 
-const unsigned int LCD_Pow_D[] = { 1, 10, 100, 1000, 10000 };
-const unsigned int LCD_Pow_H[] = { 0x1, 0x10, 0x100, 0x1000 };
+static const unsigned int _LCD_Pow_D[] = { 1, 10, 100, 1000, 10000 };
+static const unsigned int _LCD_Pow_H[] = { 0x1, 0x10, 0x100, 0x1000 };
 #define LCD_Pow(base, exp) \
-    ((base) == 10 ? LCD_Pow_D[(exp)] : \
-    ((base) == 16 ? LCD_Pow_H[(exp)] : 0))
+    (base == 10 ? _LCD_Pow_D[exp] : \
+    (base == 16 ? _LCD_Pow_H[exp] : 0))
 
 #elif LCD_POW_METHOD == 2 // 函数查表
 
-unsigned int LCD_pow(unsigned char base, unsigned char exp) {
+static unsigned int _LCD_Pow(unsigned char base, unsigned char exp) {
     if (base == 10) {
         switch (exp) {
         case 0: return 1;
@@ -31,11 +31,11 @@ unsigned int LCD_pow(unsigned char base, unsigned char exp) {
     }
     return 0;
 }
-#define LCD_Pow(base, exp) LCD_pow(base, exp)
+#define LCD_Pow(base, exp) _LCD_Pow(base, exp)
 
 #elif LCD_POW_METHOD == 3 // 硬算
 
-unsigned int LCD_pow(unsigned char base, unsigned char exp) {
+static unsigned int _LCD_Pow(unsigned char base, unsigned char exp) {
     unsigned int result = 1;
     for (; exp; exp--) {
         result *= base;
@@ -43,6 +43,6 @@ unsigned int LCD_pow(unsigned char base, unsigned char exp) {
     return result;
 }
 
-#define LCD_Pow(base, exp) LCD_pow(base, exp)
+#define LCD_Pow(base, exp) _LCD_Pow(base, exp)
 
 #endif
